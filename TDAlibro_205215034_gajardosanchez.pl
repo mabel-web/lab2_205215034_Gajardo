@@ -7,40 +7,41 @@
 %Dominio: idlibro(int) X nombre(string) X  disponibilidad(boolean)
 %Recorrido: libro (list), con los parametros señalados en el dominio.
 
-libro(id, titulo, autor, disponibilidad, [id, titulo, autor, disponibilidad]).
+libro(Id, Titulo, Autor, Disponibilidad, [Id, Titulo, Autor, Disponibilidad]).
 
 %pertenencia  %%%%%%%%%%%%%%%%%%%%%%
-esLibro(libro) :-
-    libro(_, _, _, _, libro).
-
+esLibro(L) :-
+    libro(_, _, _, _, L).
 
 
 %selectores%%%%%%%%%%%%%%%%%%%%%55
 %Descripción: esta funcion entrega el id del libro
 %Dom: libro (list)
 %Rec: idLibro (int)
-getLibroId(libro, idLibro) :-
-    libro(idLibro, _, _, _, libro).
+
+%RF10
+getLibroId(L, IdLibro) :-
+    libro(IdLibro, _, _, _, L).
 
 %Descripción: esta funcion entrega el titulo del libro
 %Dom: libro (list)
 %Rec:titulo (string)
-getLibroTitulo(libro, titulo) :-
-    libro(_, titulo, _, _, libro).
+getLibroTitulo(L, Titulo) :-
+    libro(_, Titulo, _, _, L).
 
 
 %Descripción: esta funcion entrega el autor del libro
 %Dom: libro (list)
 %Rec: autor (string)
-getLibroAutor(libro, autor) :-
-    libro(_, _, autor, _, libro).
+getLibroAutor(L, Autor) :-
+    libro(_, _, Autor, _, L).
 
 
 %Descripción: esta funcion entrega el estado de disponibilidad del libro
 %Dom: libro (list)
 %Rec: disponibilidad (boolean)
-getLibroDisponibilidad(libro, disponibilidad) :-
-    libro(_, _, _, disponibilidad, libro).
+getLibroDisponibilidad(L, Disponibilidad) :-
+    libro(_, _, _, Disponibilidad, L).
 
 %modificadores%%%%%%%%%%%%%%%%%%%
 %idlibro, titulo y autor no deberian modificarse
@@ -49,6 +50,6 @@ getLibroDisponibilidad(libro, disponibilidad) :-
 % Dominio: libro (list)
 % Recorrido: libroModificado (list)
 %Tipo de algoritmo: actualizacion de estructura
-setLibroDisponibilidad(libroIn, nuevaDisponibilidad, libroOut) :-
-    libro(id, titulo, autor, _, libroIn),
-    libro(id, titulo, autor, nuevaDisponibilidad, libroOut).
+setLibroDisponibilidad(LibroIn, NuevaDisponibilidad, LibroOut) :-
+    libro(Id, Titulo, Autor, _, LibroIn),
+    libro(Id, Titulo, Autor, NuevaDisponibilidad, LibroOut).

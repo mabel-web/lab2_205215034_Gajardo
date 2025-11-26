@@ -8,8 +8,8 @@
 % X dias-max-retraso (int) X fecha-inicial (string) X biblioteca (Biblioteca)
 %Recorrido: biblioteca (list), con los parametros señalados en el dominio
 
-biblioteca(libros, usuarios, prestamos, maxLibros, diasMax, tasaMulta, limiteDeuda, diasRetraso, fechaInicial,
-           [libros, usuarios, prestamos, maxLibros, diasMax, tasaMulta, limiteDeuda, diasRetraso, fechaInicial]).
+biblioteca(Libros, Usuarios, Prestamos, MaxLibros, DiasMax, TasaMulta, LimiteDeuda, DiasRetraso, FechaInicial,
+           [Libros, Usuarios, Prestamos, MaxLibros, DiasMax, TasaMulta, LimiteDeuda, DiasRetraso, FechaInicial]).
 
 
 %pertenencia %%%%%%%%%%%5
@@ -17,63 +17,59 @@ esBiblioteca(B) :-
     biblioteca(_, _, _, _, _, _, _, _, _, B).
 
 
-
-
-
 %selectores %%%%%%%%%%%%%%%%%%%%%
-%CAMBIAR A INICIALES LOS OTROS TDA PORQUE LO PIDE EN EL DOC
 
 %Descripción: esta funcion entrega la lista de libros
 %Dom: biblioteca (list)
 %Rec: libros (list)
-getBibliotecaLibros(B, libros) :- biblioteca(libros, _, _, _, _, _, _, _, _, B).
+getBibliotecaLibros(B, Libros) :- biblioteca(Libros, _, _, _, _, _, _, _, _, B).
 
 %Descripción: esta funcion entrega la lista de usuarios
 %Dom: biblioteca (list)
 %Rec: usuarios (list)
-getBibliotecaUsuarios(B, usuarios) :- biblioteca(_, usuarios, _, _, _, _, _, _, _, B).
+getBibliotecaUsuarios(B, Usuarios) :- biblioteca(_, Usuarios, _, _, _, _, _, _, _, B).
 
 
 %Descripción: esta funcion entrega la lista de prestamos
 %Dom: biblioteca (list)
 %Rec: prestamos (list)
-getBibliotecaPrestamos(B, prestamos) :- biblioteca(_, _, prestamos, _, _, _, _, _, _, B).
+getBibliotecaPrestamos(B, Prestamos) :- biblioteca(_, _, Prestamos, _, _, _, _, _, _, B).
 
 
 %Descripción: esta funcion entrega la cantidad maxima de libros que puede prestar
 %Dom: biblioteca (list)
 %Rec: maxLibros (int)
-getBibliotecaMaxLibros(B, maxLibros) :- biblioteca(_, _, _, maxLibros, _, _, _, _, _, B).
+getBibliotecaMaxLibros(B, MaxLibros) :- biblioteca(_, _, _, MaxLibros, _, _, _, _, _, B).
 
 
 %Descripción: esta funcion entrega los dias maximos 
 %Dom: biblioteca (list)
 %Rec: diasMax (int)
-getBibliotecaDiasMax(B, diasMax) :- biblioteca(_, _, _, _, diasMax, _, _, _, _, B).
+getBibliotecaDiasMax(B, DiasMax) :- biblioteca(_, _, _, _, DiasMax, _, _, _, _, B).
 
 
 %Descripción: esta funcion entrega la multa diaria en retraso de libros
 %Dom: biblioteca (list)
 %Rec: tasaMulta (int)
-getBibliotecaTasaMulta(B, tasaMulta) :- biblioteca(_, _, _, _, _, tasaMulta, _, _, _, B).
+getBibliotecaTasaMulta(B, TasaMulta) :- biblioteca(_, _, _, _, _, TasaMulta, _, _, _, B).
 
 
 %Descripción: esta funcion entrega el limite de deuda 
 %Dom: biblioteca (list)
 %Rec: limiteDeuda (int)
-getBibliotecaLimiteDeuda(B, limiteDeuda) :- biblioteca(_, _, _, _, _, _, limiteDeuda, _, _, B).
+getBibliotecaLimiteDeuda(B, LimiteDeuda) :- biblioteca(_, _, _, _, _, _, LimiteDeuda, _, _, B).
 
 
 %Descripción: esta funcion entrega los dias de retraso maximo
 %Dom: biblioteca (list)
 %Rec: diasRetraso (int)
-getBibliotecaDiasRetraso(B, diasRetraso) :- biblioteca(_, _, _, _, _, _, _, diasRetraso, _, B).
+getBibliotecaDiasRetraso(B, DiasRetraso) :- biblioteca(_, _, _, _, _, _, _, DiasRetraso, _, B).
 
 
 %Descripción: esta funcion entrega la fecha inicial
 %Dom: biblioteca (list)
 %Rec: fechaInicial (string)
-getBibliotecaFechaInicial(B, fechaInicial) :- biblioteca(_, _, _, _, _, _, _, _, fechaInicial, B).
+getBibliotecaFechaInicial(B, FechaInicial) :- biblioteca(_, _, _, _, _, _, _, _, FechaInicial, B).
 
 
 
@@ -83,33 +79,33 @@ getBibliotecaFechaInicial(B, fechaInicial) :- biblioteca(_, _, _, _, _, _, _, _,
 % Dominio: biblioteca (list)
 % Recorrido: bibliotecaModificado (list)
 %Tipo de algoritmo: actualizacion de estructura
-setBibliotecaLibros(bibliotecaIn, nuevoLibros, bibliotecaOut) :-
-    biblioteca(_, usuarios, prestamos, maxLibros, diasMax, tasaMulta, limiteDeuda, diasRetraso, fechaInicial, bibliotecaIn),
-    biblioteca(nuevoLibros, usuarios, prestamos, maxLibros, diasMax, tasaMulta, limiteDeuda, diasRetraso, fechaInicial, bibliotecaIn)).
+setBibliotecaLibros(BibliotecaIn, NuevoLibros, BibliotecaOut) :-
+    biblioteca(_, Usuarios, Prestamos, MaxLibros, DiasMax, TasaMulta, LimiteDeuda, DiasRetraso, FechaInicial, BibliotecaIn),
+    biblioteca(NuevoLibros, Usuarios, Prestamos, MaxLibros, DiasMax, TasaMulta, LimiteDeuda, DiasRetraso, FechaInicial, BibliotecaIn).
 
 
 % Descripción: Esta funcion modifica la lista de usuarios del tda biblioteca y entrega el resto de atributos iguales
 % Dominio: biblioteca (list)
 % Recorrido: bibliotecaModificado (list)
 %Tipo de algoritmo: actualizacion de estructura
-setBibliotecaUsuarios(bibliotecaIn, nuevoUsuarios, bibliotecaOut) :-
-    biblioteca(libros, _, prestamos, maxLibros, diasMax, tasaMulta, limiteDeuda, diasRetraso, fechaInicial, bibliotecaIn),
-    biblioteca(libros, nuevosUsuarios, prestamos, maxLibros, diasMax, tasaMulta, limiteDeuda, diasRetraso, fechaInicial, bibliotecaIn).
+setBibliotecaUsuarios(BibliotecaIn, NuevoUsuarios, BibliotecaOut) :-
+    biblioteca(Libros, _, Prestamos, MaxLibros, DiasMax, TasaMulta, LimiteDeuda, DiasRetraso, FechaInicial, BibliotecaIn),
+    biblioteca(Libros, NuevosUsuarios, Prestamos, MaxLibros, DiasMax, TasaMulta, LimiteDeuda, DiasRetraso, FechaInicial, BibliotecaIn).
 
 
 % Descripción: Esta funcion modifica la lista de prestamos del tda biblioteca y entrega el resto de atributos iguales
 % Dominio: biblioteca (list)
 % Recorrido: bibliotecaModificado (list)
 %Tipo de algoritmo: actualizacion de estructura
-setBibliotecaPrestamos(bibliotecaIn, nuevoPrestamos, bibliotecaOut)) :-
-    biblioteca(libros, usuarios, _, maxLibros, diasMax, tasaMulta, limiteDeuda, diasRetraso, fechaInicial, bibliotecaIn),
-    biblioteca(libros, usuarios, nuevosPrestamos, maxLibros, diasMax, tasaMulta, limiteDeuda, diasRetraso, fechaInicial, bibliotecaIn).
+setBibliotecaPrestamos(BibliotecaIn, NuevoPrestamos, BibliotecaOut)) :-
+    biblioteca(Libros, Usuarios, _, MaxLibros, DiasMax, TasaMulta, LimiteDeuda, DiasRetraso, FechaInicial, BibliotecaIn),
+    biblioteca(Libros, Usuarios, NuevosPrestamos, MaxLibros, DiasMax, TasaMulta, LimiteDeuda, DiasRetraso, FechaInicial, BibliotecaIn).
 
 
 % Descripción: Esta funcion modifica la fecha inicial del tda biblioteca y entrega el resto de atributos iguales
 % Dominio: biblioteca (list)
 % Recorrido: bibliotecaModificado (list)
 %Tipo de algoritmo: actualizacion de estructura
-setBibliotecaFecha(bibliotecaIn, nuevaFechaInicial, bibliotecaOut) :-
-    biblioteca(libros, usuarios, prestamos, maxLibros, diasMax, tasaMulta, limiteDeuda, diasRetraso, _, bibliotecaIn),
-    biblioteca(libros, usuarios, prestamos, maxLibros, diasMax, tasaMulta, limiteDeuda, diasRetraso, nuevaFechaInicial, bibliotecaIn)).
+setBibliotecaFecha(BibliotecaIn, NuevaFechaInicial, BibliotecaOut) :-
+    biblioteca(Libros, Usuarios, Prestamos, MaxLibros, DiasMax, TasaMulta, LimiteDeuda, DiasRetraso, _, BibliotecaIn),
+    biblioteca(Libros, Usuarios, Prestamos, MaxLibros, DiasMax, TasaMulta, LimiteDeuda, DiasRetraso, NuevaFechaInicial, BibliotecaIn)).

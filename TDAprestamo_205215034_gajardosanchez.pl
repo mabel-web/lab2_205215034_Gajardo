@@ -7,56 +7,54 @@
 %Dominio: idlibro(int) X nombre(string) X  disponibilidad(boolean)
 %Recorrido: libro (list), con los parametros señalados en el dominio.
 
-prestamo(idPrestamo, idUsuario, idLibro, fecha, diasSolicitados, estadoPrestamo, [idPrestamo, idUsuario, idLibro, fecha, diasSolicitados, estadoPrestamo]).
+prestamo(IdPrestamo, IdUsuario, IdLibro, Fecha, DiasSolicitados, EstadoPrestamo, [IdPrestamo, IdUsuario, IdLibro, Fecha, DiasSolicitados, EstadoPrestamo]).
 
 %pertenencia %%%%%%%%%%%%%%%%%%
-esPrestamo(prestamo) :-
-    prestamo(_, _, _, _, _, _, prestamo).
-
-
+esPrestamo(P) :-
+    prestamo(_, _, _, _, _, _, P).
 
 
 %selectores %%%%%%%%%%%%%%
 %Descripción: esta funcion entrega el id del prestamo
 %Dom: prestamo (list)
 %Rec: idPrestamo (int)
-getPrestamoId(prestamo, idPrestamo) :- 
-    prestamo(idPrestamo, _, _, _, _, _, prestamo).
+getPrestamoId(P, IdPrestamo) :- 
+    prestamo(IdPrestamo, _, _, _, _, _, P).
 
 
 %Descripción: esta funcion entrega el id del usuario que realiza el prestamo
 %Dom: prestamo (list)
 %Rec: idUsuario (int)
-getPrestamoUsuario(prestamo, idUsuario) :- 
-    prestamo(_, idUsuario, _, _, _, _, prestamo).
+getPrestamoUsuario(P, IdUsuario) :- 
+    prestamo(_, IdUsuario, _, _, _, _, P).
 
 
 %Descripción: esta funcion entrega el id del libro prestado
 %Dom: prestamo (list)
 %Rec: idLibro (int)
-getPrestamoLibro(prestamo, idLibro) :- 
-    prestamo(_, _, idLibro, _, _, _, prestamo).
+getPrestamoLibro(P, IdLibro) :- 
+    prestamo(_, _, IdLibro, _, _, _, P).
 
 
 %Descripción: esta funcion entrega la fecha de inicio del prestamo
 %Dom: prestamo (list)
 %Rec: fecha (string)
-getPrestamoFecha(prestamo, fecha) :- 
-    prestamo(_, _, _, fecha, _, _, prestamo).
+getPrestamoFecha(P, Fecha) :- 
+    prestamo(_, _, _, Fecha, _, _, P).
 
 
 %Descripción: esta funcion entrega el numero de dias solicitados que fue pedido el libro
 %Dom: prestamo (list)
 %Rec: diasSolicitados (int)
-getPrestamoDias(prestamo, diasSolicitados) :- 
-    prestamo(_, _, _, _, diasSolicitados, _, prestamo).
+getPrestamoDias(P, DiasSolicitados) :- 
+    prestamo(_, _, _, _, DiasSolicitados, _, P).
 
 
 %Descripción: esta funcion entrega el id del prestamo
 %Dom: prestamo (list)
 %Rec: idPrestamo (int)
-getPrestamoEstado(prestamo, estadoPrestamo) :- 
-    prestamo(_, _, _, _, _, estadoPrestamo, prestamo).
+getPrestamoEstado(P, EstadoPrestamo) :- 
+    prestamo(_, _, _, _, _, EstadoPrestamo, P).
 
 
 %modificadores %%%%%%%%%%%%%%%%%
@@ -65,9 +63,9 @@ getPrestamoEstado(prestamo, estadoPrestamo) :-
 % Dominio: prestamo (list)
 % Recorrido: prestamoModificado (list)
 %Tipo de algoritmo: actualizacion de estructura
-setPrestamoDiasSolicitados(prestamoIn, nuevosDiasSolicitados, prestamoOut) :-
-    prestamo(idPrestamo, idUsuario, idLibro, fecha, _, estadoPrestamo, prestamoIn),
-    prestamo(idPrestamo, idUsuario, idLibro, fecha, nuevosDiasSolictados, estadoPrestamo, prestamoOut).
+setPrestamoDiasSolicitados(PrestamoIn, NuevosDiasSolicitados, PrestamoOut) :-
+    prestamo(IdPrestamo, IdUsuario, IdLibro, Fecha, _, EstadoPrestamo, PrestamoIn),
+    prestamo(IdPrestamo, IdUsuario, IdLibro, Fecha, NuevosDiasSolictados, EstadoPrestamo, PrestamoOut).
 
 
 
@@ -75,7 +73,7 @@ setPrestamoDiasSolicitados(prestamoIn, nuevosDiasSolicitados, prestamoOut) :-
 % Dominio: prestamo (list)
 % Recorrido: prestamoModificado (list)
 %Tipo de algoritmo: actualizacion de estructura
-setPrestamoEstado(prestamoIn, nuevoEstadoPrestamo, prestamoOut) :-
-    prestamo(idPrestamo, idUsuario, idLibro, fecha, diasSolicitados, _, prestamoIn),
-    prestamo(idPrestamo, idUsuario, idLibro, fecha, diasSolicitados, nuevoEstadoPrestamo, prestamoOut).
+setPrestamoEstado(PrestamoIn, NuevoEstadoPrestamo, PrestamoOut) :-
+    prestamo(IdPrestamo, IdUsuario, IdLibro, Fecha, DiasSolicitados, _, PrestamoIn),
+    prestamo(IdPrestamo, IdUsuario, IdLibro, Fecha, DiasSolicitados, NuevoEstadoPrestamo, PrestamoOut).
 

@@ -1,6 +1,5 @@
 %TDAUsuario
-
-%Representación: usuario(id, nombre, deuda, libros, estado).
+%Representación en lista (id, nombre, deuda, libros, estado).
 
 %constructor %%%%%%%%%%%%%%%%%%%%%%
 
@@ -9,7 +8,7 @@
 %Recorrido:usuario (list), con los parametros señalados en el dominio.
 %Tipo de algoritmo:
 
-usuario(id, nombre, deuda, libros, estado, [id, nombre, deuda, libros, estado]).
+usuario(Id, Nombre, Deuda, Libros, Estado, [Id, Nombre, Deuda, Libros, Estado]).
 
 
 %Pertenencia %%%%%%%%%%%%%%%%%%%%%%
@@ -17,39 +16,40 @@ usuario(id, nombre, deuda, libros, estado, [id, nombre, deuda, libros, estado]).
 %Dominio: Id(int) X Nombre(string) X deuda(int) X libros(list) X PosicionActual(int) X estado(boolean)
 %Recorrido: usuario (list), con los parametros señalados en el dominio.
 
-esUsuario(usuario(_,_,_,_,_)).
+esUsuario(U) :-
+    usuario(_, _, _, _, _, U).
 
 %Selectores %%%%%%%%%%%%%%
 
 %Descripción: esta funcion entrega el id del usuario
 %Dom: usuario (list)
 %Rec: id (int)
-getUsuarioId(usuario, id) :-
-    usuario(id, _, _, _, _, usuario).
+getUsuarioId(U, Id) :-
+    usuario(Id, _, _, _, _, U).
 
 %Descripción: esta funcion entrega el nombre del usuario
 %Dom: usuario (list)
-%Rec: nombre (int)
-getUsuarioNombre(usuario, nombre) :-
-    usuario(_, nombre, _, _, _, usuario).
+%Rec: nombre (string)
+getUsuarioNombre(U, Nombre) :-
+    usuario(_, Nombre, _, _, _, U).
 
 %Descripción: esta funcion entrega la deuda del usuario
 %Dom: usuario (list)
 %Rec: deuda (int)
-getUsuarioDeuda(usuario, deuda) :-
-    usuario(_, _, deuda, _, _, usuario).
+getUsuarioDeuda(U, Deuda) :-
+    usuario(_, _, Deuda, _, _, U).
 
-%Descripción: esta funcion entrega el id del usuario
+%Descripción: esta funcion entrega el estado del usuario
 %Dom: usuario (list)
-%Rec: estado  (int)
-getUsuarioEstado(usuario, estado) :-
-    usuario(_, _, _, _, estado, usuario).
+%Rec: estado  (string)
+getUsuarioEstado(U, Estado) :-
+    usuario(_, _, _, _, Estado, U).
 
 %Descripción: esta funcion entrega la lista de libros del usuario
 %Dom: usuario (list)
-%Rec: libros (int)
-getUsuarioLibros(usuario, libros) :-
-    usuario(_, _, _, libros, _, usuario).
+%Rec: libros (list)
+getUsuarioLibros(U, Libros) :-
+    usuario(_, _, _, Libros, _, U).
 
 %Modificadores %%%%%%%%%%%%%%%%%%%%
 
@@ -57,25 +57,25 @@ getUsuarioLibros(usuario, libros) :-
 % Dominio: usuario (list)
 % Recorrido: usuarioModificado (list)
 %Tipo de algoritmo: actualizacion de estructura
-setUsuarioDeuda(usuarioIn, nuevaDeuda, usuarioOut) :-
-    usuario(id, nombre, _, libros, estado, usuarioIn),
-    usuario(id, nombre, nuevaDeuda, libros, estado, usuarioOut).
+setUsuarioDeuda(UsuarioIn, NuevaDeuda, UsuarioOut) :-
+    usuario(Id, Nombre, _, Libros, Estado, UsuarioIn),
+    usuario(Id, Nombre, NuevaDeuda, Libros, Estado, UsuarioOut).
                  
 
 % Descripción: Esta función modifica el estado de un usuario y entrega el resto de atributos iguales
 % Dominio: usuario (list)
 % Recorrido: usuarioModificado (list)
 %Tipo de algoritmo: actualizacion de estructura
-setUsuarioEstado(usuarioIn, nuevoEstado, usuarioOut) :-
-    usuario(id, nombre, deuda, libros, _, usuarioIn),
-    usuario(id, nombre, deuda, libros, nuevoEstado, usuarioOut).
+setUsuarioEstado(UsuarioIn, NuevoEstado, UsuarioOut) :-
+    usuario(Id, Nombre, Deuda, Libros, _, UsuarioIn),
+    usuario(Id, Nombre, Deuda, Libros, NuevoEstado, UsuarioOut).
 
 
 % Descripción: Esta función modifica la lista de libros de un usuario y entrega el resto de atributos iguales
 % Dominio: usuario (list)
 % Recorrido: usuarioModificado (list)
 %Tipo de algoritmo: actualizacion de estructura
-setUsuarioLibros(usuarioIn, nuevosLibros, usuarioOut) :-
-    usuario(id, nombre, deuda, _, estado, usuarioIn),
-    usuario(id, nombre, deuda, nuevosLibros, estado, usuarioOut).                 
+setUsuarioLibros(UsuarioIn, NuevosLibros, UsuarioOut) :-
+    usuario(Id, Nombre, Deuda, _, Estado, UsuarioIn),
+    usuario(Id, Nombre, Deuda, NuevosLibros, Estado, UsuarioOut).                 
 

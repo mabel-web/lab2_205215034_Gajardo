@@ -26,7 +26,7 @@ crearLibro(Id, Titulo, Autor, LibroOut) :-
 %Dominio: id (int) X idUsuario (int) X idLibro (int) X fechaPrestamo (string) X diasSolicitados (int) X prestamo (Prestamo)
 %Recorrido:
 crearPrestamo(IdPrestramo, IdUsuario, IdLibro, FechaPrestamo, DiasSolicitados, PrestamoOut) :-
-	prestamo(IdPrestamo, IdUsuario, IdLibro, FechaPrestamo, DiasSolicitados, activo, PrestamoOut).
+	prestamo(IdPrestamo, IdUsuario, IdLibro, FechaPrestamo, DiasSolicitados, PrestamoOut).
 
 
 %RF5
@@ -46,11 +46,11 @@ crearBiblioteca(Libros, Usuarios, Prestamos, MaxLibros, DiasMax, TasaMulta, Limi
 %Dominio: biblioteca (Biblioteca) X libro (Libro) X biblioteca (Biblioteca)
 %Recorrido: biblioteca (Biblioteca)
 
-existeLibro(Id1, [L|_]) :-
+existeLibro(IdX, [L|_]) :-
     getLibroId(L, Id),
-    Id =:= Id1, !.
-existeLibro(Id1, [_|LibrosRestantes]) :- % siguo buscando
-    existeLibro(Id1, LibrosRestantes).
+    Id =:= IdX, !.
+existeLibro(IdX, [_|LibrosRestantes]) :- % siguo buscando
+    existeLibro(IdX, LibrosRestantes).
 existeLibro(_, []) :-  % al final de la lista, no existe
     fail.
 
@@ -84,11 +84,11 @@ registrarUsuario(BibliotecaIn, Usuario, BibliotecaOut) :-  %  agrego y reconstru
     append(Usuarios, [Usuario], UsuariosNuevos),
     biblioteca(Libros, UsuariosNuevos, Prestamos, MaxLibros, DiasMax, TasaMulta, LimiteDeuda, DiasRetraso, Fecha, BibliotecaOut).
 
-existeUsuario(Id1, [U|_]) :-
+existeUsuario(IdX, [U|_]) :-
     getUsuarioId(U, Id),
-    Id =:= Id1, !.
-existeUsuario(Id1, [_|UsuariosRestantes]) :-
-    existeUsuario(Id1, UsuariosRestantes).
+    Id =:= IdX, !.
+existeUsuario(IdX, [_|UsuariosRestantes]) :-
+    existeUsuario(IdX, UsuariosRestantes).
 existeUsuario(_, []) :- fail. 
 
 

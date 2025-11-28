@@ -56,7 +56,7 @@ existeLibro(_, []) :-  % al final de la lista, no existe
 
 agregarLibro(BibliotecaIn, Libro1, BibliotecaOut) :-             
     biblioteca(Libros, _, _, _, _, _, _, _, _, BibliotecaIn),
-    getLibroId(Libro, Id),
+    getLibroId(Libro1, Id),
     existeLibro(Id, Libros),
     BibliotecaOut = BibliotecaIn,   % salida = entrada
     !.
@@ -105,9 +105,54 @@ obtenerUsuario(BibliotecaIn, Id, Usuario) :-
     Id =:= IdUsuario.
 
 
+%RF9
+%Descripcion: Busca un libro por "id", "titulo" o "autor". **Para "titulo"/"autor": búsqueda parcial case-insensitive (todo en minúsculas)**. 
+%**Para "id": búsqueda exacta**. **Si hay múltiples resultados, retorna el primero. Retorna false**.
+%Dominio: biblioteca (Biblioteca) X criterio (string) X valor (string/int) X libro (Libro) 
+%Recorrido: Libro (Libro)
+%Tipo de algortimo:
+
+buscarLibro(BibliotecaIn, Criterio, Valor, LibroOut) :-
+    biblioteca(Libros, _, _, _, _, _, _, _, _, BibliotecaIn),
+    Libros = [L | _],
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%falta
+
+
 %RF10
 %Descripción: esta funcion entrega el id del libro
 %Dom: libro (list)
 %Rec: idLibro (int)
-getLibroId(L, IdLibro) :-
-    libro(IdLibro, _, _, _, L).
+
+getLibroId(Libro, IdLibro) :-
+    Libro(IdLibro, _, _, _, Libro).
+
+
+%RF11 
+%Descripción: Obtiene la fecha actual del sistema desde la biblioteca.
+%Dominio: biblioteca (Biblioteca) X fecha (String)
+%Recorrido: fecha (string)
+%Tipo de algortimo: 
+
+getFecha(Biblioteca, Fecha) :- biblioteca(_, _, _, _, _, _, _, _, Fecha, Biblioteca).
+
+
+
+%RF13
+%Descripción: Verifica estado de suspensión del usuario. **Un usuario está suspendido si su campo suspendido es #t**.
+%Dominio: usuario (Usuario)  
+%Recorrido: boolean 
+%Tipo de algortimo: 
+
+isUsuarioSuspendido(Usuario) :-
+    usuario(_, _, _, _, Estado, Usuario),
+    Estado == #t.
+
+
+
+
+	
+
+
+
+
+

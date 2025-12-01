@@ -1,11 +1,20 @@
-%TDA libro
+:- module(TDAlibro_205215034_gajardosanchez, [
+    libro/5,
+    getLibroId/2,
+    esLibro/1,
+    getLibroTitulo/2,
+    getLibroAutor/2,
+    getLibroDisponibilidad/2,
+    setLibroDisponibilidad/3
+]).
+
 %representacion en lista
 %idLibro (int)X titulo (string) X autor (string) X disponibilidad (boolean)
 
 %constructor
 %Descripcion: Es el constructor del TDA libro, genera una lista que representa un libro
 %Dominio: idlibro(int) X nombre(string) X  disponibilidad(boolean)
-%Recorrido: libro (list), con los parametros señalados en el dominio.
+
 
 libro(Id, Titulo, Autor, Disponibilidad, [Id, Titulo, Autor, Disponibilidad]).
 
@@ -15,40 +24,39 @@ esLibro(L) :-
 
 
 %selectores%%%%%%%%%%%%%%%%%%%%%55
-%Descripción: esta funcion entrega el id del libro
+%Descripción: entrega el id del libro
 %Dom: libro (list)
-%Rec: idLibro (int)
+
 
 %RF10
-getLibroId(L, IdLibro) :-
-    libro(IdLibro, _, _, _, L).
+getLibroId(libro(Id, _, _, _), Id).
 
-%Descripción: esta funcion entrega el titulo del libro
+%Descripción:  entrega el titulo del libro
 %Dom: libro (list)
-%Rec:titulo (string)
+
 getLibroTitulo(L, Titulo) :-
     libro(_, Titulo, _, _, L).
 
 
-%Descripción: esta funcion entrega el autor del libro
+%Descripción:  entrega el autor del libro
 %Dom: libro (list)
-%Rec: autor (string)
+
 getLibroAutor(L, Autor) :-
     libro(_, _, Autor, _, L).
 
 
-%Descripción: esta funcion entrega el estado de disponibilidad del libro
+%Descripción: entrega el estado de disponibilidad del libro
 %Dom: libro (list)
-%Rec: disponibilidad (boolean)
+
 getLibroDisponibilidad(L, Disponibilidad) :-
     libro(_, _, _, Disponibilidad, L).
 
 %modificadores%%%%%%%%%%%%%%%%%%%
 %idlibro, titulo y autor no deberian modificarse
 
-% Descripción: Esta función modifica el estado de disponibilidad la lista libro y entrega el resto de atributos iguales
+% Descripción: modifica el estado de disponibilidad la lista libro y entrega el resto de atributos iguales
 % Dominio: libro (list)
-% Recorrido: libroModificado (list)
+
 %Tipo de algoritmo: actualizacion de estructura
 setLibroDisponibilidad(LibroIn, NuevaDisponibilidad, LibroOut) :-
     libro(Id, Titulo, Autor, _, LibroIn),

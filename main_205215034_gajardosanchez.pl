@@ -16,7 +16,8 @@
 	isLibroDisponible/2,
 	isUsuarioSuspendido/1,
 	obtenerDeuda/2,
-    obtenerFechaVencimiento/2
+    obtenerFechaVencimiento/2,
+    calcularDiasRetraso/3
 ]).
 
 :- use_module('TDAlibro_205215034_gajardosanchez.pl', [
@@ -188,6 +189,7 @@ buscarLibro(BibliotecaIn, Criterio, Valor, LibroOut) :-  %primer libro coincide
     getBibliotecaLibros(BibliotecaIn, Libros),
     member(LibroOut, Libros),
     busquedaParcial(Criterio, Valor, LibroOut), !.
+
 busquedaParcial(id, Valor, Libro) :-
     getLibroId(Libro, IdLibro),
     IdLibro =:= Valor.
@@ -264,6 +266,45 @@ obtenerDeuda(Usuario, Deuda) :-
 %Tipo de algortimo: 
 
 obtenerFechaVencimiento(Prestamo, Fecha) :- 
-    getPrestamoFecha(Prestamo, Fecha), 
+    getPrestamoFecha(Prestamo, FechaString), 
     getPrestamoDias(Prestamo, DiasSolicitados),
-  
+    split_string(FechaString, "/", "", FechaSeparada),
+    FechaSeparada = [DiaString, MesString],
+    number_string(Dia, DiaString),
+    number_string(Mes, MesString),
+    DiaActual is Dia + DiasSolicitados,
+    MesesExtra is (DiaActual - 1) // 30,
+    DiaFinal is ((DiaActual - 1) mod 30) + 1,
+    MesFinal is Mes + MesesExtra,
+    agregarCero(DiaFinal, DiaFinalString),
+    agregarCero(MesFinal, MesFinalString),
+    string_concat(DiaFinalString, "/", DiasGuardados),
+    string_concat(DiasGuardados, MesFinalString, Fecha).
+agregarCero(Numero, String) :-
+    Numero < 10,
+    number_string(Numero, NumeroString),
+    string_concat("0", NumeroString, String).
+agregarCero(Numero, String) :-
+    Numero >= 10,
+    number_string(Numero, String).
+
+%RF16
+%Descripción: Calcula días de retraso entre fecha de vencimiento y fecha actual. 
+%**Retorna 0 si no hay retraso (fecha actual <= vencimiento)**
+%Dominio: fecha-vencimiento (string) X fecha-actual (string) X dias (int)
+%Meta principal: calcularDiasRetraso/3
+%Meta secundaria:
+%Tipo de algortimo: 
+
+calcularDiasRetraso(FechaVenc, FechaActual, DiasRetraso) :- 
+    split_string(FechaVenc, "/", "", [DiaVencString, MesVencString]),
+    number_string(DiaVenc, DiaVencString),
+    number_string(MesVenc, MesVencString),
+    split_string(FechaActual, "/", "", [DiaActString, MesActString]),
+    number_string(DiaActual, DiaActString),
+    number_string(MesActual, MesActString),
+    DiasVenc is MesVenc * 30 + DiaVenc,
+    DiasActual is MesActual * 30 + DiaActual,
+    Diferencia is DiasActual - DiasVenc,
+    DiasRetraso is max(0, Diferencia).
+

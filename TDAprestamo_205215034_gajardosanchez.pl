@@ -11,60 +11,51 @@
     setPrestamoDiasSolicitados/3
 ]).
 
-%contructor %%%%%%%%%%%%%%%%%%%%%
+%contructor
 %Descripcion: Es el constructor del TDA libro, genera una lista que representa un libro
 %Dominio: 
+%Meta principal: 
 
-prestamo(IdPrestamo, IdUsuario, IdLibro, Fecha, DiasSolicitados, PrestamoOut) :-
-    PrestamoOut = [IdPrestamo, IdUsuario, IdLibro, Fecha, DiasSolicitados].
+prestamo(IdPrestamo, IdUsuario, IdLibro, Fecha, DiasSolicitados, [IdPrestamo, IdUsuario, IdLibro, Fecha, DiasSolicitados]).
 
+%pertenencia
+%Meta principal: 
+esPrestamo([_, _, _, _, _]).
 
-%pertenencia %%%%%%%%%%%%%%%%%%
-esPrestamo(P) :-
-    prestamo(_, _, _, _, _, P).
-
-%selectores %%%%%%%%%%%%%%
+%selectores
 %Descripción: entrega el id del prestamo
 %Dom: prestamo (list)
-
-getPrestamoId(P, IdPrestamo) :- 
-    prestamo(IdPrestamo, _, _, _, _, P).
+%Meta principal: 
+getPrestamoId([IdPrestamo, _, _, _, _], IdPrestamo).
 
 
 %Descripción: entrega el id del usuario que realiza el prestamo
 %Dom: prestamo (list)
-
-getPrestamoUsuario(P, IdUsuario) :- 
-    prestamo(_, IdUsuario, _, _, _, P).
+%Meta principal: 
+getPrestamoUsuario([_, IdUsuario, _, _, _], IdUsuario).
 
 
 %Descripción: entrega el id del libro prestado
 %Dom: prestamo (list)
-
-getPrestamoLibro(P, IdLibro) :- 
-    prestamo(_, _, IdLibro, _, _, P).
+%Meta principal: 
+getPrestamoLibro([_, _, IdLibro, _, _], IdLibro).
 
 
 %Descripción: entrega la fecha de inicio del prestamo
 %Dom: prestamo (list)
-
-getPrestamoFecha(P, Fecha) :- 
-    prestamo(_, _, _, Fecha, _, P).
+%Meta principal: 
+getPrestamoFecha([_, _, _, Fecha, _], Fecha).
 
 
 %Descripción: entrega el numero de dias solicitados que fue pedido el libro
 %Dom: prestamo (list)
+%Meta principal: 
+getPrestamoDias([_, _, _, _, DiasSolicitados], DiasSolicitados).
 
-getPrestamoDias(P, DiasSolicitados) :- 
-    prestamo(_, _, _, _, DiasSolicitados, P).
 
-
-%modificadores %%%%%%%%%%%%%%%%%
-
+%modificadores
 % Descripción: modifica el numero de dias solicitados del prestamo y entrega el resto de atributos iguales
 % Dominio: prestamo (list)
-
+%Meta principal: 
 %Tipo de algoritmo: actualizacion de estructura
-setPrestamoDiasSolicitados(PrestamoIn, NuevosDiasSolicitados, PrestamoOut) :-
-    prestamo(IdPrestamo, IdUsuario, IdLibro, Fecha, _, PrestamoIn),
-    prestamo(IdPrestamo, IdUsuario, IdLibro, Fecha, NuevosDiasSolictados, PrestamoOut).
+setPrestamoDiasSolicitados([IdPrestamo, IdUsuario, IdLibro, Fecha, _], NuevosDiasSolicitados, [IdPrestamo, IdUsuario, IdLibro, Fecha, NuevosDiasSolicitados]).

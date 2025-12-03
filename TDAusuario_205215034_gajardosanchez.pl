@@ -14,7 +14,7 @@
 
 %Representación en lista (id, nombre, deuda, libros, estado).
 
-%el tda usuario interpreta el booleano del estado
+% El TDA usuario interpreta el booleano del estado
 %true = suspendido
 %false = activo
 
@@ -32,7 +32,7 @@ usuario(Id, Nombre, Deuda, Libros, Estado, [Id, Nombre, Deuda, Libros, Estado]).
 %Meta principal: 
 esUsuario([_, _, _, _, _]).
 
-%Selectores %%%%%%%%%%%%%%
+%Selectores
 
 %Descripción: entrega el id del usuario
 %Dom: usuario (list)

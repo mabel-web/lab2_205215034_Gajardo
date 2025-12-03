@@ -17,7 +17,11 @@
 	isUsuarioSuspendido/1,
 	obtenerDeuda/2,
     obtenerFechaVencimiento/2,
-    calcularDiasRetraso/3
+    calcularDiasRetraso/3,
+    calcularMulta/4,
+    tomarPrestamo/6,
+    devolverLibro/5,
+    debeSuspenderse/3
 ]).
 
 :- use_module('TDAlibro_205215034_gajardosanchez.pl', [
@@ -235,15 +239,16 @@ isLibroDisponible(BibliotecaIn, IdLibro) :-
 
 
 %RF13
-%Descripción: Verifica estado de suspensión del usuario. **Un usuario está suspendido si su campo suspendido es true**.
+%Descripción: Verifica estado de suspensión del usuario.
 %Dominio: usuario (Usuario)  
 %Meta principal: isUsuarioSuspendido/1
 %Meta secundaria:
 %Tipo de algortimo: 
 
-isUsuarioSuspendido(Usuario) :- %%%%%%%%% no retorna true pero retorna la lista, y retorna false bien
+isUsuarioSuspendido(Usuario) :- 
     getUsuarioEstado(Usuario, Estado),
-    Estado == true.
+    Estado == false. 
+    % Si el estado es falso entonces esta activo y retorns true
 
 
 %RF14
@@ -276,7 +281,7 @@ obtenerFechaVencimiento(Prestamo, Fecha) :-
     MesesExtra is (DiaActual - 1) // 30,
     DiaFinal is ((DiaActual - 1) mod 30) + 1,
     MesFinal is Mes + MesesExtra,
-    agregarCero(DiaFinal, DiaFinalString),
+    agregarCero(DiaFinal, DiaFinalString), % si el número es un digito le agrego un cero 
     agregarCero(MesFinal, MesFinalString),
     string_concat(DiaFinalString, "/", DiasGuardados),
     string_concat(DiasGuardados, MesFinalString, Fecha).
@@ -308,3 +313,32 @@ calcularDiasRetraso(FechaVenc, FechaActual, DiasRetraso) :-
     Diferencia is DiasActual - DiasVenc,
     DiasRetraso is max(0, Diferencia).
 
+%RF17
+%Descripcion: Calcula multa multiplicando días de retraso por tasa diaria. **Si no hay retraso, multa es 0**.
+%Dominio: prestamo (Prestamo) X fecha-actual (string) X tasa-multa-diaria (int) X multa (number)
+%Meta principal: calcularMulta/4
+%Meta secundaria:
+
+calcularMulta(PrestamoIn, FechaActual, Tasa, Multa) :-  
+    obtenerFechaVencimiento(PrestamoIn, FechaVenc),
+    calcularDiasRetraso(FechaVenc, FechaActual, DiasRetraso),
+    Multa is DiasRetraso * Tasa.
+
+%RF18
+%Descripcion:Usuario toma libro prestado. **Verifica: 1) libro disponible, 2) usuario no suspendido, 3) no excede límite de libros, 
+%4) días solicitados no exceden maximo, 5) deuda no excede límite**. **Si alguna verificación falla retorna false**.
+%Dominio: biblioteca (Biblioteca) X id-usuario (int) X id-libro (int) X dias-solicitados (int) X fecha-actual (string) X biblioteca (Biblioteca)
+%Meta principal: tomarPrestamo/6
+
+tomarPrestamo(BibliotecaIn, IdUsuario, IdLibro, Dias, FechaActual, BibliotecaOut) :-
+    getBibliotecaMaxLibros(BibliotecaIn, MaxLibros),
+    getBibliotecaDiasMax(BibliotecaIn, DiasMax),
+    getBibliotecaLimiteDeuda(BibliotecaIn, LimiteDeuda),
+    buscarLibro(BibliotecaIn, id, IdLibro, Libro),
+    getLibroDisponibilidad(Libro, true),
+    obtenerUsuario(BibliotecaIn, IdUsuario, Usuario),
+    getUsuarioEstado(Usuario, false), %El estado false indica que el usuaruo esta activo (doc)
+    getUsuarioLibros(Usuario, LibrosUsuario),
+    length(LibrosUsuario, CantidadLibros)?????uso
+    
+    

@@ -339,6 +339,202 @@ tomarPrestamo(BibliotecaIn, IdUsuario, IdLibro, Dias, FechaActual, BibliotecaOut
     obtenerUsuario(BibliotecaIn, IdUsuario, Usuario),
     getUsuarioEstado(Usuario, false), %El estado false indica que el usuaruo esta activo (doc)
     getUsuarioLibros(Usuario, LibrosUsuario),
-    length(LibrosUsuario, CantidadLibros)?????uso
+    length(LibrosUsuario, CantidadLibros)
+    CantidadLibros < MaxLibros, % condición
+    Dias =< DiasMax,         %condición
+    getUsuarioDeuda(Usuario, Deuda),
+    Deuda < LimiteDeuda,       % condición
+    setLibroDisponibilidad(Libro, false, LibroActualizado), % en libros false indica prestado (desactivado)
+    append(LibrosUsuario, [IdLibro], NuevosLibrosUsuario),
+    setUsuarioLibros(Usuario, NuevosLibrosUsuario, UsuarioActualizado),
+    getBibliotecaPrestamos(BibliotecaIn, Prestamos),
+    lenght(Prestamos, CantidadPrestamos),
+    IdPrestamo is CantidadPrestamos + 1,
+    crearPrestamo(IdPrestamo, IdUsuario, IdLibro, FechaActual, DiasSolicitados, NuevoPrestamo),
+    getBibliotecaLibros(BibliotecaIn, Libros),
+    cambiarLibro(Libros, IdLibro, LibroActualizado, NuevosLibros),
+    setBibliotecaLibros(BibliotecaIn, NuevosLibros, Biblioteca1),
+    getBibliotecaUsuarios(Biblioteca1, Usuarios),
+    reemplazarUsuario(Usuarios, IdUsuario, UsuarioActualizado, NuevosUsuarios),
+    setBibliotecaUsuarios(Biblioteca1, NuevosUsuarios, Biblioteca2),
+    append(Prestamos, [NuevoPrestamo], NuevosPrestamos),
+    setBibliotecaPrestamos(Biblioteca2, NuevosPrestamos, BibliotecaOut).
+% función aux q cambia el libro creo que no puuedo usar solo setters, cambia solo 1 libro/usuario dentro de la lista
+cambiarLibro([Libro|Resto], IdBuscado, LibroNuevo, [LibroNuevo|Resto]) :-
+    getLibroId(Libro, IdLibro),
+    IdLibro =:= IdBuscado.
+cambiarLibro([Libro|Resto], IdBuscado, LibroNuevo, [Libro|RestoActualizado]) :-
+    getLibroId(Libro, IdLibro),
+    IdLibro =\= IdBuscado,
+    reemplazarLibro(Resto, IdBuscado, LibroNuevo, RestoActualizado).
+cambiarUsuario([Usuario|Resto], IdBuscado, UsuarioNuevo, [UsuarioNuevo|Resto]) :-
+    getUsuarioId(Usuario, IdUsuario),
+    IdUsuario =:= IdBuscado.
+cambiarUsuario([Usuario|Resto], IdBuscado, UsuarioNuevo, [Usuario|RestoActualizado]) :-
+    getUsuarioId(Usuario, IdUsuario),
+    IdUsuario =\= IdBuscado,
+    cambiarUsuario(Resto, IdBuscado, UsuarioNuevo, RestoActualizado).
+
+
+
+%RF19
+%Descripción: Devuelve un libro y procesa multas. **Calcula multa por retraso, suma la deuda del usuario, marca el libro disponible. 
+%Si la deuda total excede el límite, se suspende al usuario automáticamente. Usuario suspendido SÍ puede devolver**.
+% Dominio:biblioteca (Biblioteca) X id-usuario (int) X id-libro (int) X fecha-actual (string) X biblioteca (Biblioteca)
+% Meta principal: devolverLibro/5
+
+devolverLibro(BibliotecaIn, IdUsuario, IdLibro, FechaActual, BibliotecaOut) :-
+    getBibliotecaTasaMulta(BibliotecaIn, TasaMulta),
+    getBibliotecaLimiteDeuda(BibliotecaIn, LimiteDeuda),
+    getBibliotecaPrestamos(BibliotecaIn, Prestamos),
+    member(Prestamo, Prestamos),
+    getPrestamoUsuario(Prestamo, IdUsuario),
+    getPrestamoLibro(Prestamo, IdLibro),
+    calcularMulta(Prestamo, FechaActual, TasaMulta, Multa),
+    obtenerUsuario(BibliotecaIn, IdUsuario, Usuario), % Actualizo deuda 
+    getUsuarioDeuda(Usuario, DeudaActual),
+    NuevaDeuda is DeudaActual + Multa,
+    setUsuarioDeuda(Usuario, NuevaDeuda, Usuario2),
+    verificarSuspension(Usuario2, NuevaDeuda, LimiteDeuda, Usuario3),
+
+    % elimino el libro de la lista de usuario
+
+    getUsuarioLibros(Usuario3, LibrosUsuario),
+    delete(LibrosUsuario, IdLibro, NuevosLibros),
+    setUsuarioLibros(Usuario3, NuevosLibros, Usuario4),
+    buscarLibro(BibliotecaIn, id, IdLibro, Libro),
+    setLibroDisponibilidad(Libro, true, LibroDisponible), % marcar  el libro como disponible de nuevo
+   
+    % Y aqui actualizo todo en la biblioteca
+    getBibliotecaLibros(BibliotecaIn, Libros),
+    actualizarLibro(Libros, IdLibro, LibroDisponible, LibrosNuevos),
+    setBibliotecaLibros(BibliotecaIn, LibrosNuevos, B1),
+    getBibliotecaUsuarios(B1, Usuarios),
+    actualizarUsuario(Usuarios, IdUsuario, Usuario4, UsuariosNuevos),
+    setBibliotecaUsuarios(B1, UsuariosNuevos, B2),
+    delete(Prestamos, Prestamo, PrestamosNuevos),
+    setBibliotecaPrestamos(B2, PrestamosNuevos, BibliotecaOut).
+
+verificarSuspension(Usuario, Deuda, Limite, UsuarioFinal) :-
+    Deuda >= Limite,
+    setUsuarioEstado(Usuario, true, UsuarioFinal). % True indica q está suspendido (sale en el doc)
+verificarSuspension(Usuario, Deuda, Limite, Usuario) :-
+    Deuda < Limite.
+
+actualizarLibro([L|Resto], Id, LibroNuevo, [LibroNuevo|Resto]) :-
+    getLibroId(L, Id).
+actualizarLibro([L|Resto], Id, LibroNuevo, [L|RestoActualizado]) :-
+    getLibroId(L, IdL),
+    IdL =\= Id,
+    actualizarLibro(Resto, Id, LibroNuevo, RestoActualizado).
+actualizarUsuario([U|Resto], Id, UsuarioNuevo, [UsuarioNuevo|Resto]) :-
+    getUsuarioId(U, Id).
+actualizarUsuario([U|Resto], Id, UsuarioNuevo, [U|RestoActualizado]) :-
+    getUsuarioId(U, IdU),
+    IdU =\= Id,
+    actualizarUsuario(Resto, Id, UsuarioNuevo, RestoActualizado).
+
+
+%RF20
+%Descripcion: Verifica si el usuario debe suspenderse automáticamente. **Criterios: 1) deuda > límite maximo, O 
+%2) tiene algun libro con retraso > días maximos permitidos**. Si el usuario debe ser suspendido retorna true caso contrario false.
+%Dominio: biblioteca (Biblioteca) X id-usuario (int) X fecha-actual (string)
+%Meta principal: debeSuspenderse/3
+
+
+debeSuspenderse(Biblioteca, IdUsuario, FechaActual) :-
+    obtenerUsuario(Biblioteca, IdUsuario, Usuario),
+    getUsuarioDeuda(Usuario, Deuda),
+    getBibliotecaLimiteDeuda(Biblioteca, Limite),
+    Deuda >= Limite.
+debeSuspenderse(Biblioteca, IdUsuario, FechaActual) :-
+    getBibliotecaPrestamos(Biblioteca, Prestamos),
+    getBibliotecaDiasRetraso(Biblioteca, DiasMax),
+    member(Prestamo, Prestamos),
+    getPrestamoUsuario(Prestamo, IdUsuario),
+    obtenerFechaVencimiento(Prestamo, FechaVenc),
+    calcularDiasRetraso(FechaVenc, FechaActual, Retraso),
+    Retraso > DiasMax.
+
+
+%RF21
+% Descripcion: Suspende al usuario manualmente cambiando su estado a true. Si el usuario se encuentra suspendido entonces el usuario se mantiene intacto en la biblioteca de salida.
+%Dominio: biblioteca (Biblioteca) X idUsuario (int) X biblioteca (Biblioteca)
+%Meta principal: suspenderUsuario/3
+
+suspenderUsuario(BibliotecaIn, IdUsuario, BibliotecaOut) :-
+    obtenerUsuario(BibliotecaIn, IdUsuario, Usuario),
+    getUsuarioEstado(Usuario, false), 
+    setUsuarioEstado(Usuario, true, UsuarioSuspendido),  
+    getBibliotecaUsuarios(BibliotecaIn, Usuarios),
+    actualizarUsuario(Usuarios, IdUsuario, UsuarioSuspendido, NuevosUsuarios),
+    setBibliotecaUsuarios(BibliotecaIn, NuevosUsuarios, BibliotecaOut).
+suspenderUsuario(BibliotecaIn, IdUsuario, BibliotecaIn) :-
+    obtenerUsuario(BibliotecaIn, IdUsuario, Usuario),
+    getUsuarioEstado(Usuario, true).  
+
+
+%RF22
+%Descripcion: Renueva préstamo agregando días extra. **Verifica: 1) préstamo existe y está activo, 2) usuario no suspendido, 
+% 3) no hay retraso actual, 4) días totales no exceden maximo**. **Si falla alguna verificación, retorna false**.
+%Dominio: biblioteca (Biblioteca) X id-prestamo (int) X dias-extra (int) X fecha-actual (string) X biblioteca (Biblioteca)
+%Meta principal: renovarPrestamo/5
+
+%renovarPrestamo( B1, IdPrestamo, DiasExtra, FechaActual, B2).
+
+
+
+
+
+
+%RF23
+%Descripcion: Usuario paga monto para reducir deuda. **Para reactivarse debe: pagar TODA la deuda (deuda=0) 
+%Y no tener libros con retraso excesivo**. Si paga parcialmente, reduce deuda pero sigue suspendido.
+%Dominio: biblioteca (Biblioteca) X id-usuario (int) X monto (int) X biblioteca (Biblioteca)
+%Meta principal: pagarDeuda/4
+
+
+%pagarDeuda( bibliotecaIn, IdUsuario, monto, BibliotecaOut).
+
+
+
+
+
+
+%RF24
+%Descripcion: Obtiene préstamos de un usuario formateados como string. 
+%**Retorna string vacío si usuario no existe o sin préstamos**. **Muestra: ID préstamo, ID libro, fecha préstamo, vencimiento, estado**.
+%Dominio: biblioteca (Biblioteca) X IdUsuario (int) X str (String)
+%Meta principal:
+
+%historialPrestamosUsuario( BibliotecaIn, IdUsuario, Str).
+
+
+
+
+
+
+
+
+
+%RF25
+%Descripcion: Obtiene todos los préstamos formateados como string legible. **Debe mostrar: ID préstamo, 
+%ID usuario, ID libro, fecha préstamo, días solicitados, estado (activo/completado)**. 
+%No debe mostrar por pantalla, el resultado debe quedar en el segundo argumento de este predicado.
+%Dominio: biblioteca (Biblioteca) X str (String)
+%Meta principal:
+
+%historialPrestamosSistema( BibliotecaIn, Str).
+
+
+
+%RF26
+%Descripcion: Simula que pasa un día. **Fecha actual + 1 día. Si día=30 pasa a 01 del mes siguiente. 
+%No considera años ni casos especiales**. Actualiza fecha interna del sistema y ejecuta todos los procesos internos de la biblioteca que actualizan la multa, 
+%verifican si el usuario debe estar suspendido y suspender al usuario.
+%Dominio: biblioteca (Biblioteca) X biblioteca (Biblioteca)
+%Meta principal: procesarDia/2
+
+%procesarDia( BibliotecaIn, BibliotecaOut).
     
     

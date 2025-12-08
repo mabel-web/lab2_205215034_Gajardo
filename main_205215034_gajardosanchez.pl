@@ -464,7 +464,6 @@ suspenderUsuario(BibliotecaIn, IdUsuario, BibliotecaIn) :-
 %Dominio: biblioteca (Biblioteca) X id-prestamo (int) X dias-extra (int) X fecha-actual (string) X biblioteca (Biblioteca)
 %Meta principal: renovarPrestamo/5
 
-
 renovarPrestamo(B1, IdPrestamo, DiasExtra, FechaActual, B2) :-
     getBibliotecaPrestamos(B1, Prestamos),
     member(Prestamo, Prestamos),
@@ -495,6 +494,8 @@ cambiarPrestamo([Prestamo|Resto], IdPrestamo, PrestamoNuevo, [Prestamo|RestoActu
 %Y no tener libros con retraso excesivo**. Si paga parcialmente, reduce deuda pero sigue suspendido.
 %Dominio: biblioteca (Biblioteca) X id-usuario (int) X monto (int) X biblioteca (Biblioteca)
 %Meta principal: pagarDeuda/4
+%meta secundaria: obtenerUsuario/3, getUsuarioDeuda/2, setUsuarioDeuda/3, verificarReactivacion/4, getBibliotecaUsuarios/2, cambiarUsuario/4
+%setBibliotecaUsuarios/3, getUsuarioId/2, tieneRetrasoExcesivo/2, setUsuarioEstado/3
 
 pagarDeuda(BibliotecaIn, IdUsuario, Monto, BibliotecaOut) :-
     obtenerUsuario(BibliotecaIn, IdUsuario, Usuario),
@@ -525,7 +526,8 @@ tieneRetrasoExcesivo(Biblioteca, IdUsuario) :-
 %Descripcion: Obtiene préstamos de un usuario formateados como string. 
 %**Retorna string vacío si usuario no existe o sin préstamos**. **Muestra: ID préstamo, ID libro, fecha préstamo, vencimiento, estado**.
 %Dominio: biblioteca (Biblioteca) X IdUsuario (int) X str (String)
-%Meta principal: 
+%Meta principal: historialPrestamosUsuario/3
+%meta secundaria: getBibliotecaPrestamos/2, member/2, getPrestamoUsuario/2, formarPrestamo/2, getPrestamoId/2, getPrestamoLibro/2, getPrestamoFecha/2, obtenerFechaVencimiento/2, format/3
 
 historialPrestamosUsuario(Biblioteca, IdUsuario, StrPrestamo) :-
     getBibliotecaPrestamos(Biblioteca, Prestamos),

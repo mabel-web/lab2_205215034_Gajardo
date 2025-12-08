@@ -1,0 +1,123 @@
+crearLibro(101, "El Hobbit", "J.R.R. Tolkien", L1),
+crearLibro(102, "1984", "George Orwell", L2),
+crearBiblioteca([L1, L2], [], [], 3, 30, 0.5, 1000, 10, [2025,1,1], B1),
+buscarLibro(B1, autor, "ORWELL", Libro),
+getLibroAutor(Libro, Autor).
+
+biblioteca([], [], [], 100, 14, 0.5, 1000, 0, fecha(2024,1,1), B1),
+libro(1, "don quijote", "Cervantes", disponible, L1),
+agregarLibro(B1, L1, B2).
+
+crearBiblioteca([], [], [], 100, 14, 0.5, 1000, 0, [2024,1,1], B1),
+crearUsuario(1, "Ricardo Retamal", U1),
+registrarUsuario(B1, U1, B2),
+crearUsuario(2, "Maria belen", U2),
+registrarUsuario(B2, U2, B3).
+
+crearBiblioteca([], [], [], 3, 30, 0.5, 1000, 10, [2025,1,1], B1),
+getFecha(B1, Fecha).
+
+calcularDiasRetraso("10/05", "10/05", Dias).
+calcularDiasRetraso("28/01", "05/02", Dias).
+
+crearUsuario(1, "Ricardo", U1),
+crearLibro(101, "Don Quijote", "Cervantes", L1),
+crearBiblioteca([L1], [U1], [], 3, 30, 0.5, 1000, 10, [2025,1,1], B1),
+tomarPrestamo(B1, 1, 101, 5, "01/01", B2).
+
+crearUsuario(1, "Ricardo", U1),
+crearBiblioteca([], [U1], [], 3, 30, 0.5, 1000, 10, [2025,1,1], B1),
+suspenderUsuario(B1, 1, B2),
+obtenerUsuario(B2, 1, Usuario),
+getUsuarioEstado(Usuario, Estado).
+
+crearPrestamo(1, 1, 101, "03/02", 5, P1),
+calcularMulta(P1, "13/02", 100, Multa).
+
+%ejemplo falso
+crearUsuario(1, "Ricardo", U1),
+setUsuarioEstado(U1, true, U2),
+crearLibro(101, "Don Quijote", "Cervantes", L1),
+crearBiblioteca([L1], [U2], [], 3, 30, 0.5, 1000, 10, "01/01", B1),
+tomarPrestamo(B1, 1, 101, 5, "01/01", B2).
+
+crearUsuario(1, "Ricardo", U1), 
+setUsuarioEstado(U1, false, U2), %activo retorna bien
+isUsuarioSuspendido(U2).
+
+crearUsuario(1, "Ricardo", U1),
+setUsuarioEstado(U1, true, U2), %retorna falso
+isUsuarioSuspendido(U2).
+
+%falso
+crearUsuario(1, "Ricardo", U1),
+crearLibro(101, "Don Quijote", "Cervantes", L1),
+crearBiblioteca([L1], [U1], [], 3, 30, 0.5, 1000, 10, "01/01", B1),
+tomarPrestamo(B1, 1, 101, 5, "01/01", B2),
+isLibroDisponible(B2, 101).
+
+crearUsuario(1, "Ricardo", U1),
+crearPrestamo(1, 1, 101, "01/01", 5, P1),
+crearBiblioteca([], [U1], [P1], 3, 30, 0.5, 1000, 10, "20/01", B1),
+debeSuspenderse(B1, 1, "20/01").
+
+%false
+crearUsuario(1, "Ricardo", U1),
+crearBiblioteca([], [U1], [], 3, 30, 0.5, 1000, 10, "15/01", B1),
+debeSuspenderse(B1, 1, "15/01").
+
+
+%sigue suspemdido
+crearUsuario(1, "Ricardo", U1),
+setUsuarioDeuda(U1, 500, U2),
+setUsuarioEstado(U2, true, U3),
+crearBiblioteca([], [U3], [], 3, 30, 0.5, 1000, 10, "15/01", B1),
+pagarDeuda(B1, 1, 200, B2),
+obtenerUsuario(B2, 1, Usuario),
+getUsuarioDeuda(Usuario, Deuda),
+getUsuarioEstado(Usuario, Estado).
+
+%pago, se reactiva
+crearUsuario(1, "Ricardo", U1),
+setUsuarioDeuda(U1, 500, U2),
+setUsuarioEstado(U2, true, U3),
+crearBiblioteca([], [U3], [], 3, 30, 0.5, 1000, 10, "15/01", B1),
+pagarDeuda(B1, 1, 500, B2),
+obtenerUsuario(B2, 1, Usuario),
+getUsuarioDeuda(Usuario, Deuda),
+getUsuarioEstado(Usuario, Estado).
+
+crearUsuario(1, "Ricardo", U1),
+crearLibro(101, "Don Quijote", "Cervantes", L1),
+crearLibro(102, "1984", "Orwell", L2),
+crearLibro(103, "Cien Años", "Marquez", L3),
+crearPrestamo(1, 1, 101, "01/01", 5, P1),
+crearPrestamo(2, 1, 102, "10/01", 10, P2),
+crearPrestamo(3, 1, 103, "15/01", 7, P3),
+crearBiblioteca([L1, L2, L3], [U1], [P1, P2, P3], 3, 30, 0.5, 1000, 10, "01/01", B1),
+historialPrestamosUsuario(B1, 1, Str),
+writeln(Str).
+%funciona mostrando mas con ;
+
+%false
+crearBiblioteca([], [], [], 3, 30, 0.5, 1000, 10, "01/01", B1),
+historialPrestamosUsuario(B1, 99, Str).
+
+
+% deuda después de pago parcial
+crearUsuario(1, "Ricardo", U1),
+setUsuarioDeuda(U1, 500, U2),
+crearBiblioteca([], [U2], [], 3, 30, 0.5, 1000, 10, "01/01", B1),
+pagarDeuda(B1, 1, 200, B2),
+obtenerUsuario(B2, 1, Usuario),
+obtenerDeuda(Usuario, Deuda).
+
+crearUsuario(1, "Ricardo", U1),
+setUsuarioDeuda(U1, 500, U2),
+crearBiblioteca([], [U2], [], 3, 30, 0.5, 1000, 10, "01/01", B1),
+pagarDeuda(B1, 1, 500, B2),
+obtenerUsuario(B2, 1, Usuario),
+obtenerDeuda(Usuario, Deuda).
+
+crearPrestamo(1, 1, 101, "28/01", 5, P1),
+obtenerFechaVencimiento(P1, FechaVenc).

@@ -1,0 +1,27 @@
+Autoevaluación requerimientos funcionales.
+%RF01 TDAs: 1
+%RF02 crearUsuario: 1
+%RF03 crearLibro: 1
+%RF04 crearPrestamo: 1
+%RF05 crearBiblioteca: 1
+%RF06 agregarLibro: 1
+%RF07 registrarUsuario: 1
+%RF08 obtenerUsuario: 1
+%RF09 buscarLibro: 0.75
+%RF10 getLibroId: 1
+%RF11 getFecha: 1
+%RF12 isLibroDisponible: 1
+%RF13 isUsuarioSuspendido: 1
+%RF14 obtenerDeuda: 1
+%RF15 obtenerFechaVencimiento: 1
+%RF16 calcularDiasRetraso: 1
+%RF17 calcularMulta: 1
+%RF18 tomarPrestamo: 1
+%RF19 devolverLibro: 0.25
+%RF20 debeSuspenderse: 1
+%RF21 suspenderUsuario: 1
+%RF22 renovarPrestamo:
+%RF23 pagarDeuda: 1
+%RF24 historialPrestamosUsuario: 1
+%RF25 historialPrestamosSistema: 0
+%RF26 procesarDia: 0
